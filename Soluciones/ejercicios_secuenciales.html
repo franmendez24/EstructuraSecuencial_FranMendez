@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ejercicios de estructura secuencial</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --text: #1d2433; --muted: #5d6679;
+    --border: #e1e4ea; --accent: #2f6fed; --accent-soft: #e8efff;
+    --code-bg: #0f1623; --code-text: #e6edf7; --mark: #ffe58a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e1118; --card: #171b25; --text: #e7eaf1; --muted: #9aa3b5;
+      --border: #272d3b; --accent: #6b9bff; --accent-soft: #1d2a47;
+      --code-bg: #0a0d14; --code-text: #e6edf7; --mark: #6b5a00;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { position: sticky; top: 0; z-index: 10; background: var(--bg);
+    border-bottom: 1px solid var(--border); padding: 14px 16px; }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 1.25rem; margin: 0 0 10px; }
+  .bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .search { flex: 1 1 240px; position: relative; }
+  .search input { width: 100%; padding: 10px 36px 10px 12px; font-size: 1rem;
+    border: 1px solid var(--border); border-radius: 10px; background: var(--card); color: var(--text); }
+  .search input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  .search button { position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    border: 0; background: transparent; color: var(--muted); font-size: 1.2rem; cursor: pointer; display: none; }
+  .btn { border: 1px solid var(--border); background: var(--card); color: var(--text);
+    padding: 9px 12px; border-radius: 10px; cursor: pointer; font-size: .9rem; }
+  .btn:hover { border-color: var(--accent); }
+  #count { color: var(--muted); font-size: .85rem; margin-top: 8px; }
+  main { padding: 16px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 18px; margin: 0 auto 16px; max-width: 860px; }
+  .card h2 { margin: 0 0 6px; font-size: 1.1rem; display: flex; gap: 10px; align-items: center; }
+  .num { background: var(--accent-soft); color: var(--accent); border-radius: 8px;
+    padding: 2px 10px; font-size: .9rem; font-weight: 600; }
+  .stmt { margin: 0 0 14px; }
+  .label { font-size: .75rem; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 6px; display: flex; justify-content: space-between; align-items: center; }
+  pre { margin: 0; background: var(--code-bg); color: var(--code-text); border-radius: 10px;
+    padding: 14px; overflow-x: auto; font: 13.5px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .copy { border: 1px solid var(--border); background: transparent; color: var(--muted);
+    border-radius: 7px; padding: 2px 9px; font-size: .75rem; cursor: pointer; text-transform: none; letter-spacing: 0; }
+  .copy:hover { color: var(--accent); border-color: var(--accent); }
+  .note { margin: 10px 0 0; font-size: .9rem; color: var(--muted); }
+  mark { background: var(--mark); color: inherit; border-radius: 3px; padding: 0 1px; }
+  .hide-sol .sol { display: none; }
+  #empty { text-align: center; color: var(--muted); padding: 40px 0; display: none; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Ejercicios de estructura secuencial <span style="color:var(--muted);font-weight:400">· Python 3</span></h1>
+    <div class="bar">
+      <div class="search">
+        <input id="q" type="search" placeholder="Buscar (ej. hipotenusa, 12, Celsius…)  — pulsa / para enfocar" autocomplete="off" aria-label="Buscar ejercicios">
+        <button id="clear" aria-label="Borrar búsqueda">×</button>
+      </div>
+      <button class="btn" id="toggle">Ocultar soluciones</button>
+    </div>
+    <div id="count"></div>
+  </div>
+</header>
+
+<main>
+  <div id="list"></div>
+  <div id="empty">No hay ejercicios que coincidan con tu búsqueda.</div>
+</main>
+
+<script>
+const EJERCICIOS = [
+{
+ n: 1, titulo: "Saludo",
+ enunciado: "Escribir un programa que pregunte al usuario su nombre, y luego lo salude.",
+ codigo: `nombre = input("¿Cómo te llamas? ")
+print("¡Hola,", nombre + "!")`
+},
+{
+ n: 2, titulo: "Perímetro y área de un rectángulo",
+ enunciado: "Calcular el perímetro y área de un rectángulo dada su base y su altura.",
+ codigo: `base = float(input("Base: "))
+altura = float(input("Altura: "))
+
+perimetro = 2 * (base + altura)
+area = base * altura
+
+print("Perímetro:", perimetro)
+print("Área:", area)`
+},
+{
+ n: 3, titulo: "Hipotenusa",
+ enunciado: "Dados los catetos de un triángulo rectángulo, calcular su hipotenusa.",
+ codigo: `import math
+
+a = float(input("Cateto a: "))
+b = float(input("Cateto b: "))
+
+hipotenusa = math.sqrt(a ** 2 + b ** 2)
+print("Hipotenusa:", hipotenusa)`
+},
+{
+ n: 4, titulo: "Operaciones básicas",
+ enunciado: "Dados dos números, mostrar la suma, resta, división y multiplicación de ambos.",
+ codigo: `a = float(input("Primer número: "))
+b = float(input("Segundo número: "))
+
+print("Suma:", a + b)
+print("Resta:", a - b)
+print("Multiplicación:", a * b)
+if b != 0:
+    print("División:", a / b)
+else:
+    print("División: no se puede dividir entre 0")`
+},
+{
+ n: 5, titulo: "Fahrenheit a Celsius",
+ enunciado: "Escribir un programa que convierta un valor dado en grados Fahrenheit a grados Celsius. Recordar que la fórmula para la conversión es: C = (F-32)*5/9",
+ codigo: `f = float(input("Grados Fahrenheit: "))
+
+c = (f - 32) * 5 / 9
+
+print(f, "°F equivalen a", round(c, 2), "°C")`
+},
+{
+ n: 6, titulo: "Media de tres números",
+ enunciado: "Calcular la media de tres números pedidos por teclado.",
+ codigo: `a = float(input("Primer número: "))
+b = float(input("Segundo número: "))
+c = float(input("Tercer número: "))
+
+media = (a + b + c) / 3
+print("Media:", media)`
+},
+{
+ n: 7, titulo: "Minutos a horas y minutos",
+ enunciado: "Realiza un programa que reciba una cantidad de minutos y muestre por pantalla a cuántas horas y minutos corresponde. Por ejemplo: 1000 minutos son 16 horas y 40 minutos.",
+ codigo: `total = int(input("Cantidad de minutos: "))
+
+horas = total // 60
+minutos = total % 60
+
+print(total, "minutos son", horas, "horas y", minutos, "minutos")`
+},
+{
+ n: 8, titulo: "Sueldo con comisión",
+ enunciado: "Un vendedor recibe un sueldo base más un 10% extra por comisión de sus ventas, el vendedor desea saber cuánto dinero obtendrá por concepto de comisiones por las tres ventas que realiza en el mes y el total que recibirá en el mes tomando en cuenta su sueldo base y comisiones.",
+ codigo: `sueldo_base = float(input("Sueldo base: "))
+venta1 = float(input("Importe de la venta 1: "))
+venta2 = float(input("Importe de la venta 2: "))
+venta3 = float(input("Importe de la venta 3: "))
+
+comision = (venta1 + venta2 + venta3) * 0.10
+total = sueldo_base + comision
+
+print("Comisiones:", round(comision, 2), "€")
+print("Total a recibir en el mes:", round(total, 2), "€")`
+},
+{
+ n: 9, titulo: "Descuento del 15%",
+ enunciado: "Una tienda ofrece un descuento del 15% sobre el total de la compra y un cliente desea saber cuánto deberá pagar finalmente por su compra.",
+ codigo: `compra = float(input("Total de la compra: "))
+
+descuento = compra * 0.15
+a_pagar = compra - descuento
+
+print("Descuento:", round(descuento, 2), "€")
+print("Total a pagar:", round(a_pagar, 2), "€")`
+},
+{
+ n: 10, titulo: "Calificación final",
+ enunciado: "Un alumno desea saber cuál será su calificación final en la materia de Algoritmos. Dicha calificación se compone de los siguientes porcentajes: 55% del promedio de sus tres calificaciones parciales. 30% de la calificación del examen final. 15% de la calificación de un trabajo final.",
+ codigo: `p1 = float(input("Nota del parcial 1: "))
+p2 = float(input("Nota del parcial 2: "))
+p3 = float(input("Nota del parcial 3: "))
+examen = float(input("Nota del examen final: "))
+trabajo = float(input("Nota del trabajo final: "))
+
+promedio_parciales = (p1 + p2 + p3) / 3
+final = promedio_parciales * 0.55 + examen * 0.30 + trabajo * 0.15
+
+print("Calificación final:", round(final, 2))`
+},
+{
+ n: 11, titulo: "Distancia entre dos números",
+ enunciado: "Pide al usuario dos números y muestra la “distancia” entre ellos (el valor absoluto de su diferencia, de modo que el resultado sea siempre positivo).",
+ codigo: `a = float(input("Primer número: "))
+b = float(input("Segundo número: "))
+
+distancia = abs(a - b)
+print("Distancia:", distancia)`
+},
+{
+ n: 12, titulo: "Distancia entre dos puntos",
+ enunciado: "Pide al usuario dos pares de números x1,y1 y x2,y2, que representen dos puntos en el plano. Calcula y muestra la distancia entre ellos.",
+ nota: "El enunciado original dice «x1,y2», pero se entiende que es x1,y1.",
+ codigo: `import math
+
+x1 = float(input("x1: "))
+y1 = float(input("y1: "))
+x2 = float(input("x2: "))
+y2 = float(input("y2: "))
+
+distancia = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+print("Distancia entre los puntos:", distancia)`
+},
+{
+ n: 13, titulo: "Raíz cuadrada y raíz cúbica",
+ enunciado: "Realizar un algoritmo que lea un número y que muestre su raíz cuadrada y su raíz cúbica. Python3 no tiene ninguna función predefinida que permita calcular la raíz cúbica, ¿Cómo se puede calcular?",
+ nota: "La raíz cúbica se calcula elevando el número a 1/3, porque la raíz n-ésima de x es x elevado a 1/n.",
+ codigo: `n = float(input("Introduce un número (positivo): "))
+
+raiz_cuadrada = n ** 0.5      # equivale a math.sqrt(n)
+raiz_cubica = n ** (1 / 3)    # raíz cúbica = elevar a 1/3
+
+print("Raíz cuadrada:", raiz_cuadrada)
+print("Raíz cúbica:", raiz_cubica)`
+},
+{
+ n: 14, titulo: "Número de dos cifras invertido",
+ enunciado: "Dado un número de dos cifras, diseñe un algoritmo que permita obtener el número invertido. Ejemplo, si se introduce 23 que muestre 32.",
+ codigo: `n = int(input("Número de dos cifras: "))
+
+decenas = n // 10
+unidades = n % 10
+
+invertido = unidades * 10 + decenas
+print("Número invertido:", invertido)`
+},
+{
+ n: 15, titulo: "Intercambio de variables",
+ enunciado: "Dadas dos variables numéricas A y B, que el usuario debe teclear, se pide realizar un algoritmo que intercambie los valores de ambas variables y muestre cuánto valen al final las dos variables.",
+ codigo: `A = float(input("Valor de A: "))
+B = float(input("Valor de B: "))
+
+# Forma clásica, con una variable auxiliar
+auxiliar = A
+A = B
+B = auxiliar
+
+# En Python también se puede hacer así:
+# A, B = B, A
+
+print("Ahora A vale", A, "y B vale", B)`
+},
+{
+ n: 16, titulo: "Alcance entre dos vehículos",
+ enunciado: "Dos vehículos viajan a diferentes velocidades (v1 y v2) y están distanciados por una distancia d. El que está detrás viaja a una velocidad mayor. Se pide hacer un algoritmo para ingresar la distancia entre los dos vehículos (km) y sus respectivas velocidades (km/h) y con esto determinar y mostrar en qué tiempo (minutos) alcanzará el vehículo más rápido al otro.",
+ nota: "Tiempo de alcance = distancia / (velocidad del rápido − velocidad del lento). Sale en horas, así que se multiplica por 60.",
+ codigo: `d = float(input("Distancia entre los vehículos (km): "))
+v1 = float(input("Velocidad del vehículo de atrás, el más rápido (km/h): "))
+v2 = float(input("Velocidad del vehículo de delante (km/h): "))
+
+tiempo_horas = d / (v1 - v2)
+tiempo_minutos = tiempo_horas * 60
+
+print("Lo alcanzará en", round(tiempo_minutos, 2), "minutos")`
+},
+{
+ n: 17, titulo: "Hora de llegada del ciclista",
+ enunciado: "Un ciclista parte de una ciudad A a las HH horas, MM minutos y SS segundos. El tiempo de viaje hasta llegar a otra ciudad B es de T segundos. Escribir un algoritmo que determine la hora de llegada a la ciudad B.",
+ nota: "Se pasa todo a segundos, se suma T y se vuelve a descomponer. El % 86400 hace que, si pasa de medianoche, la hora vuelva a empezar en 0.",
+ codigo: `hh = int(input("Hora de salida (HH): "))
+mm = int(input("Minutos de salida (MM): "))
+ss = int(input("Segundos de salida (SS): "))
+t = int(input("Duración del viaje (segundos): "))
+
+salida_en_segundos = hh * 3600 + mm * 60 + ss
+llegada_en_segundos = (salida_en_segundos + t) % 86400   # 86400 s = 24 h
+
+h_llegada = llegada_en_segundos // 3600
+m_llegada = (llegada_en_segundos % 3600) // 60
+s_llegada = llegada_en_segundos % 60
+
+print(f"Llegada a B: {h_llegada:02d}:{m_llegada:02d}:{s_llegada:02d}")`
+},
+{
+ n: 18, titulo: "Iniciales",
+ enunciado: "Pedir el nombre y los dos apellidos de una persona y mostrar las iniciales.",
+ codigo: `nombre = input("Nombre: ")
+apellido1 = input("Primer apellido: ")
+apellido2 = input("Segundo apellido: ")
+
+iniciales = nombre[0] + apellido1[0] + apellido2[0]
+print("Iniciales:", iniciales.upper())`
+},
+{
+ n: 19, titulo: "Nota final de un test",
+ enunciado: "Escribir un algoritmo para calcular la nota final de un estudiante, considerando que: por cada respuesta correcta 5 puntos, por una incorrecta -1 y por respuestas en blanco 0. Imprime el resultado obtenido por el estudiante.",
+ codigo: `correctas = int(input("Respuestas correctas: "))
+incorrectas = int(input("Respuestas incorrectas: "))
+en_blanco = int(input("Respuestas en blanco: "))
+
+nota = correctas * 5 + incorrectas * (-1) + en_blanco * 0
+
+print("Nota final:", nota, "puntos")`
+},
+{
+ n: 20, titulo: "Dinero en monedas",
+ enunciado: "Diseñar un algoritmo que nos diga el dinero que tenemos (en euros y céntimos) después de pedirnos cuántas monedas tenemos (de 2€, 1€, 50 céntimos, 20 céntimos o 10 céntimos).",
+ nota: "Se trabaja en céntimos (números enteros) para evitar errores de decimales y al final se separa en euros y céntimos.",
+ codigo: `m2e = int(input("Monedas de 2 €: "))
+m1e = int(input("Monedas de 1 €: "))
+m50 = int(input("Monedas de 50 céntimos: "))
+m20 = int(input("Monedas de 20 céntimos: "))
+m10 = int(input("Monedas de 10 céntimos: "))
+
+total_centimos = m2e * 200 + m1e * 100 + m50 * 50 + m20 * 20 + m10 * 10
+
+euros = total_centimos // 100
+centimos = total_centimos % 100
+
+print("Tienes", euros, "euros y", centimos, "céntimos")`
+}
+];
+
+const $list = document.getElementById('list');
+const $q = document.getElementById('q');
+const $count = document.getElementById('count');
+const $empty = document.getElementById('empty');
+const $clear = document.getElementById('clear');
+const $toggle = document.getElementById('toggle');
+
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+// Normaliza sin tildes y en minúsculas, conservando la longitud para poder resaltar
+const norm = s => Array.from(s).map(c => c.normalize('NFD')[0].toLowerCase()).join('');
+
+function hl(text, q) {
+  if (!q) return esc(text);
+  const t = norm(text), nq = norm(q);
+  let out = '', last = 0, i;
+  while ((i = t.indexOf(nq, last)) !== -1) {
+    out += esc(text.slice(last, i)) + '<mark>' + esc(text.slice(i, i + nq.length)) + '</mark>';
+    last = i + nq.length;
+  }
+  return out + esc(text.slice(last));
+}
+
+function haystack(e) {
+  return norm(['ejercicio', e.n, e.titulo, e.enunciado, e.nota || '', e.codigo].join(' '));
+}
+EJERCICIOS.forEach(e => e._h = haystack(e));
+
+function render() {
+  const q = $q.value.trim();
+  const nq = norm(q);
+  const terms = nq.split(/\s+/).filter(Boolean);
+  const res = EJERCICIOS.filter(e => terms.every(t => e._h.includes(t)));
+  // Para resaltar usamos la búsqueda completa; si no aparece, resaltamos cada palabra
+  const hlq = q;
+
+  $list.innerHTML = res.map(e => `
+    <article class="card" id="ej${e.n}">
+      <h2><span class="num">${e.n}</span><span>${hl(e.titulo, hlq)}</span></h2>
+      <p class="stmt">${hl(e.enunciado, hlq)}</p>
+      <div class="sol">
+        <div class="label"><span>Solución</span><button class="copy" data-n="${e.n}">Copiar código</button></div>
+        <pre><code>${hl(e.codigo, hlq)}</code></pre>
+        ${e.nota ? `<p class="note">💡 ${hl(e.nota, hlq)}</p>` : ''}
+      </div>
+    </article>`).join('');
+
+  $empty.style.display = res.length ? 'none' : 'block';
+  $clear.style.display = q ? 'block' : 'none';
+  $count.textContent = q
+    ? res.length + ' de ' + EJERCICIOS.length + ' ejercicios'
+    : EJERCICIOS.length + ' ejercicios';
+}
+
+$q.addEventListener('input', render);
+$clear.addEventListener('click', () => { $q.value = ''; render(); $q.focus(); });
+$toggle.addEventListener('click', () => {
+  const hidden = document.body.classList.toggle('hide-sol');
+  $toggle.textContent = hidden ? 'Mostrar soluciones' : 'Ocultar soluciones';
+});
+document.addEventListener('keydown', ev => {
+  if (ev.key === '/' && document.activeElement !== $q) { ev.preventDefault(); $q.focus(); }
+  if (ev.key === 'Escape' && document.activeElement === $q) { $q.value = ''; render(); }
+});
+$list.addEventListener('click', ev => {
+  const b = ev.target.closest('.copy');
+  if (!b) return;
+  const e = EJERCICIOS.find(x => x.n === Number(b.dataset.n));
+  const done = () => { b.textContent = '¡Copiado!'; setTimeout(() => b.textContent = 'Copiar código', 1400); };
+  if (navigator.clipboard) navigator.clipboard.writeText(e.codigo).then(done, done);
+  else {
+    const ta = document.createElement('textarea'); ta.value = e.codigo;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); done();
+  }
+});
+
+render();
+</script>
+</body>
+</html>
