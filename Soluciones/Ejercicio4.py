@@ -1,5 +1,5 @@
 #Fran Mendez Gonzalez
-#Ejercicio3
+#Ejercicio4
 #Dados dos números, mostrar la suma, resta, división y multiplicación de ambos
 #3/11/2026
 

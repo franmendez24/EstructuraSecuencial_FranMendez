@@ -1,5 +1,5 @@
 #Fran Mendez Gonzalez
-#Ejercicio1
+#Ejercicio2
 #Calcular el perímetro y área de un rectángulo dada su base y su altura.
 #3/11/2026
 
